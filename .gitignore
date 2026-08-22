@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Temporary directories
+_pak_root_tmp/
+*.bak
+
+# Input / Output assets (preserve folders via .gitkeep)
+input/*
+!input/.gitkeep
+output/*
+!output/.gitkeep
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store

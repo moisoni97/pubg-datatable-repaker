@@ -15,8 +15,11 @@ _pak_root_tmp/
 # Input / Output assets (preserve folders via .gitkeep)
 input/*
 !input/.gitkeep
+!input/PUBGNameHashMap.json
 output/*
 !output/.gitkeep
+exported_json/*
+!exported_json/.gitkeep
 
 # IDEs
 .vscode/

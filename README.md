@@ -70,6 +70,24 @@ Once you find the new hash, it is advised to make a PR and update the [CUE4Parse
 
 ---
 
+### Translating Exported JSONs
+
+If exported DataTable JSON files contain obfuscated property names, enums, or asset hashes (e.g. `*3845ea526d`, `*d85827e15a::*7b78d477a5`), you can translate them automatically to clean English names using `PUBGNameHashMap.json`:
+
+1. **Drop** your exported JSON files into the `exported_json/` folder.
+2. **Run**:
+   - **Double-click** `translate.bat`, or
+   - Run via terminal:
+     ```bash
+     python translate.py
+     ```
+
+*(You can also pass a custom file/folder path directly: `python translate.py path/to/file.json` or drag-and-drop a file onto `translate.bat`).*
+
+> **Note**: Make sure `PUBGNameHashMap.json` is updated for the latest PUBG version. You can generate an up-to-date mapping file using [pubg-namehash-generator](https://github.com/moisoni97/pubg-namehash-generator).
+
+---
+
 ## Configuration (`config.json`)
 
 ```json
@@ -111,13 +129,17 @@ When PUBG releases a patch and DataTable stop showing rows:
 ## Repository Structure
 
 ```
-PUBG-DataTable-Repaker/
-├── config.json          # Configuration file for current hash & pak settings
-├── repak.py             # Main Python patcher & repak pipeline
-├── repak.exe            # Unreal Engine pak packaging utility
-├── run.bat              # One-click Windows runner
-├── input/               # Drop raw .uasset / .uexp files here
-├── output/              # Patched .pak output destination
+pubg-datatable-repaker/
+├── config.json               # Configuration file for current hash & pak settings
+├── repak.py                  # Main Python patcher & repak pipeline
+├── translate.py              # Utility to translate obfuscated JSON exports
+├── repak.exe                 # Unreal Engine pak packaging utility
+├── run.bat                   # One-click Windows runner for repak
+├── translate.bat             # One-click Windows runner for JSON translator
+├── input/                    # Drop raw .uasset / .uexp files here
+│   └── PUBGNameHashMap.json  # Dictionary mapping hashes to English names
+├── output/                   # Patched .pak output destination
+├── exported_json/            # Drop exported JSON files here to translate
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -130,6 +152,7 @@ PUBG-DataTable-Repaker/
 - [repak](https://github.com/trumank/repak) by trumank - High-performance Unreal Engine `.pak` CLI tool.
 - [CUE4Parse](https://github.com/FabianFG/CUE4Parse) by FabianFG - Unreal Engine asset parsing library.
 - [FModel](https://github.com/4sval/FModel) by 4sval - Unreal Engine archive explorer.
+- [pubg-namehash-generator](https://github.com/moisoni97/pubg-namehash-generator) by moisoni97 - PUBG name hash generation utility.
 
 ---
 

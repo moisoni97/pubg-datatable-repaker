@@ -63,10 +63,25 @@ Once you find the new hash, it is advised to make a PR and update the [CUE4Parse
 
 ### Loading in FModel
 
-1. Open **FModel**.
-2. Go to **Settings** -> **Directory**.
-3. Add the `output/` folder directory path.
-4. Load the archive - DataTable rows will now deserialize and display all data.
+You can load the generated `.pak` into FModel in two ways depending on your workflow:
+
+#### Method 1: Full Game Context (Recommended)
+Allows FModel to resolve complete in-game references, StringTables, localized text, and asset paths using the base game archives:
+
+1. **Copy** `output/patch_DataTable_P.pak` to your PUBG game directory:
+   ```
+   C:\Program Files (x86)\Steam\SteamApps\common\PUBG\TslGame\Content\Paks
+   ```
+2. Open **FModel** and set **Settings** -> **Directory** to your game's `Paks` folder.
+3. In the Archives list, find `patch_DataTable_P.pak` (located at the bottom of the list) and load **only** this patch file.
+4. Export the desired DataTable as JSON into `exported_json/`.
+5. Run **`translate.bat`** to de-obfuscate all property keys and enum values.
+
+#### Method 2: Standalone Mode (Quick Preview)
+1. Open **FModel** and set **Settings** -> **Directory** to the project's `output/` folder.
+2. Load `patch_DataTable_P.pak` and export your DataTable.
+
+> **Note**: All row data, properties, numbers, and IDs deserialize properly, but external game references such as StringTables and localized text remain unresolved.
 
 ---
 
@@ -88,6 +103,66 @@ If exported DataTable JSON files contain obfuscated property names, enums, or as
 
 ---
 
+## Examples
+
+### 1. Loading Mode Comparison
+
+#### Standalone Mode (Project `output/` folder)
+Row structures and values deserialize, but localized string references remain blank:
+```json
+"ItemName": {
+  "TableId": "/Game/Item/Equip/ST_item_equipment_ItemNames.ST_Item_Equipment_ItemNames",
+  "Key": "ItemName_Armor_C_01_Lv3",
+  "LocalizedString": ""
+}
+```
+
+#### Full Game Context (Game `Paks/` folder)
+FModel reads the base game's StringTables and resolves the in-game text:
+```json
+"ItemName": {
+  "TableId": "/Game/Item/Equip/ST_item_equipment_ItemNames.ST_Item_Equipment_ItemNames",
+  "Key": "ItemName_Armor_C_01_Lv3",
+  "LocalizedString": "Military Vest (Level 3)"
+}
+```
+
+---
+
+### 2. JSON Translation Comparison
+
+#### Before Translation
+```json
+"Rows": {
+  "0": {
+    "*4aa8bfd36a": "None",
+    "SkinApplicationType": "*d85827e15a::*7b78d477a5",
+    "ItemName": {
+      "TableId": "/Game/Item/Equip/ST_item_equipment_ItemNames.ST_Item_Equipment_ItemNames",
+      "Key": "ItemName_Armor_C_01_Lv3",
+      "LocalizedString": "Military Vest (Level 3)"
+    }
+  }
+}
+```
+
+#### After Translation
+```json
+"Rows": {
+  "0": {
+    "SkinPresetName": "None",
+    "SkinApplicationType": "SkinApplicationType::Default",
+    "ItemName": {
+      "TableId": "/Game/Item/Equip/ST_item_equipment_ItemNames.ST_Item_Equipment_ItemNames",
+      "Key": "ItemName_Armor_C_01_Lv3",
+      "LocalizedString": "Military Vest (Level 3)"
+    }
+  }
+}
+```
+
+---
+
 ## Configuration (`config.json`)
 
 ```json
@@ -104,7 +179,7 @@ If exported DataTable JSON files contain obfuscated property names, enums, or as
 | `rowstruct_hash` | The current obfuscated hash for `RowStruct`. Accepts `*hash`, `_hash`, or raw hash. |
 | `repak_exe` | Path or command for the `repak` CLI binary. |
 | `pak_version` | Unreal Engine pak format version. |
-| `output_pak_name` | Name of the output `.pak` archive (keep `_P.pak` suffix for patch priority). |
+| `output_pak_name` | Name of the output `.pak` archive. |
 
 ---
 
